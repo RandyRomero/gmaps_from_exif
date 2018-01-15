@@ -1,7 +1,7 @@
 #!python3
 # -*- coding: utf-8 -*-
-# Utility script to check EXIF of individual file
-
+# Simple script that open for you a google map with a marker pointing to a place
+# where given photo have been taken (if there are coordinates in EXIF of photo)
 import exifread
 import os
 
@@ -22,7 +22,11 @@ def exif_to_dd(value):
     lat = -(idf_tag_to_coordinate(lat)) if lat_ref == 'S' else idf_tag_to_coordinate(lat)
     lon = -(idf_tag_to_coordinate(lon)) if lon_ref == 'E' else idf_tag_to_coordinate(lon)
 
-    print(str(lat) + ' ' + str(lon))
+    print('GPS coordinates in decimal degrees format:')
+    print('Latitude: ' + str(lat))
+    print('Longitude: ' + str(lon))
+    print('Query for Google Maps:')
+    print('https://www.google.com/maps/?q={:.5f},{:.5f} '.format(lat, lon))
     return lat, lon
 
 
@@ -31,8 +35,8 @@ def read_exif(file):
         tags = exifread.process_file(image, details=False)
         if len(tags.keys()) < 1:
             print('The is no EXIF in this file.')
+            exit()
 
-        print('Printing GPS coordinates in degrees decimal format')
         raw_coordinates = [tags['GPS GPSLatitudeRef'],
                            tags['GPS GPSLatitude'],
                            tags['GPS GPSLongitudeRef'],
@@ -42,7 +46,7 @@ def read_exif(file):
 
 
 while True:
-    file_path = input('Please type in path to photo:\n')
+    file_path = input('Please type in path to photo: ')
     if os.path.exists(file_path):
         print('Gotcha!')
         read_exif(file_path)
