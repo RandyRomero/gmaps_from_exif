@@ -4,6 +4,7 @@
 # where given photo have been taken (if there are coordinates in EXIF of photo)
 import exifread
 import os
+import webbrowser
 
 
 def exif_to_dd(value):
@@ -20,13 +21,14 @@ def exif_to_dd(value):
 
     # Return positive ir negative longitude/latitude from exifread's ifdtag
     lat = -(idf_tag_to_coordinate(lat)) if lat_ref == 'S' else idf_tag_to_coordinate(lat)
-    lon = -(idf_tag_to_coordinate(lon)) if lon_ref == 'E' else idf_tag_to_coordinate(lon)
+    lon = -(idf_tag_to_coordinate(lon)) if lon_ref == 'W' else idf_tag_to_coordinate(lon)
 
     print('GPS coordinates in decimal degrees format:')
     print('Latitude: ' + str(lat))
     print('Longitude: ' + str(lon))
     print('Query for Google Maps:')
     print('https://www.google.com/maps/?q={:.5f},{:.5f} '.format(lat, lon))
+    webbrowser.open('https://www.google.com/maps/?q={:.5f},{:.5f} '.format(lat, lon))
     return lat, lon
 
 
@@ -37,16 +39,23 @@ def read_exif(file):
             print('The is no EXIF in this file.')
             exit()
 
-        raw_coordinates = [tags['GPS GPSLatitudeRef'],
-                           tags['GPS GPSLatitude'],
-                           tags['GPS GPSLongitudeRef'],
-                           tags['GPS GPSLongitude']]
+        try:
+            raw_coordinates = [tags['GPS GPSLatitudeRef'],
+                               tags['GPS GPSLatitude'],
+                               tags['GPS GPSLongitudeRef'],
+                               tags['GPS GPSLongitude']]
 
-        exif_to_dd(raw_coordinates)
+            exif_to_dd(raw_coordinates)
+
+        except KeyError:
+            print('This picture doesn\'t contain GPS coordinates.')
 
 
 while True:
     file_path = input('Please type in path to photo: ')
+    while '"' in file_path:  # Strip quotes if you drop picture in command line
+        file_path = file_path.replace('"', '')
+    print(file_path)
     if os.path.exists(file_path):
         print('Gotcha!')
         read_exif(file_path)
