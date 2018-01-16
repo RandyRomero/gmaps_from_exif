@@ -2,9 +2,15 @@
 # -*- coding: utf-8 -*-
 # Simple script that open for you a google map with a marker pointing to a place
 # where given photo have been taken (if there are coordinates in EXIF of photo)
-import exifread
+
+import pip
 import os
 import webbrowser
+
+try:
+    __import__('exifread')
+except ImportError:
+    pip.main(['install', 'exifread'])
 
 
 def exif_to_dd(value):
