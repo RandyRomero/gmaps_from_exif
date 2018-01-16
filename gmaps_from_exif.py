@@ -1,7 +1,10 @@
 #!python3
 # -*- coding: utf-8 -*-
-# Simple script that open for you a google map with a marker pointing to a place
-# where given photo have been taken (if there are coordinates in EXIF of photo)
+
+# Simple script that opens for you Google Maps with a marker pointing to the place where the
+# given photo has been taken (if there are coordinates in EXIF of photo).
+# Written by Aleksandr Mikheev
+# https://github.com/RandyRomero/gmaps_from_exif
 
 import pip
 import os
