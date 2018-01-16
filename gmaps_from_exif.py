@@ -12,6 +12,8 @@ try:
 except ImportError:
     pip.main(['install', 'exifread'])
 
+import exifread
+
 
 def exif_to_dd(value):
     lat_ref = str(value[0])
